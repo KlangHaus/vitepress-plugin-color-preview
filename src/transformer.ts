@@ -31,9 +31,7 @@ export function colorPreviewTransformer(): {
   return {
     name: 'color-preview',
     span(node: HastElement) {
-      const textChildren = node.children.filter(
-        (c): c is HastText => c.type === 'text',
-      )
+      const textChildren = node.children.filter((c): c is HastText => c.type === 'text')
       if (textChildren.length === 0) return
 
       const fullText = textChildren.map((c) => c.value).join('')

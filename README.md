@@ -15,17 +15,17 @@ Automatic color swatches for your VitePress documentation. Detects CSS color val
 
 ### Supported color formats
 
-| Format | Examples |
-|--------|---------|
-| Hex | `#f00` `#ff6600` `#ff660080` |
-| RGB/RGBA | `rgb(255, 100, 0)` `rgba(255, 100, 0, 0.5)` |
-| Modern RGB | `rgb(255 100 0 / 50%)` |
-| HSL/HSLA | `hsl(30, 100%, 50%)` `hsla(30, 100%, 50%, 0.5)` |
-| Modern HSL | `hsl(30 100% 50% / 50%)` |
-| OKLCH | `oklch(70% 0.15 30)` |
-| OKLAB | `oklab(70% 0.1 -0.05)` |
-| Named | `red` `cornflowerblue` `rebeccapurple` |
-| Tailwind | `bg-blue-500` `text-emerald-600` `border-rose-400` |
+| Format     | Examples                                           |
+| ---------- | -------------------------------------------------- |
+| Hex        | `#f00` `#ff6600` `#ff660080`                       |
+| RGB/RGBA   | `rgb(255, 100, 0)` `rgba(255, 100, 0, 0.5)`        |
+| Modern RGB | `rgb(255 100 0 / 50%)`                             |
+| HSL/HSLA   | `hsl(30, 100%, 50%)` `hsla(30, 100%, 50%, 0.5)`    |
+| Modern HSL | `hsl(30 100% 50% / 50%)`                           |
+| OKLCH      | `oklch(70% 0.15 30)`                               |
+| OKLAB      | `oklab(70% 0.1 -0.05)`                             |
+| Named      | `red` `cornflowerblue` `rebeccapurple`             |
+| Tailwind   | `bg-blue-500` `text-emerald-600` `border-rose-400` |
 
 ## Install
 
@@ -150,18 +150,23 @@ setupColorPreview()
 ### Utilities
 
 ```ts
-import { extractColor, findColorsInText, isNamedColor, extractTailwindColor } from 'vitepress-plugin-color-preview'
+import {
+  extractColor,
+  findColorsInText,
+  isNamedColor,
+  extractTailwindColor,
+} from 'vitepress-plugin-color-preview'
 
-extractColor('#ff6600')        // '#ff6600'
-extractColor('rebeccapurple')  // 'rebeccapurple'
-extractColor('not a color')    // null
+extractColor('#ff6600') // '#ff6600'
+extractColor('rebeccapurple') // 'rebeccapurple'
+extractColor('not a color') // null
 
-findColorsInText('color: #ff6600;')  // [{ value: '#ff6600', index: 7, length: 7 }]
+findColorsInText('color: #ff6600;') // [{ value: '#ff6600', index: 7, length: 7 }]
 
-isNamedColor('coral')  // true
+isNamedColor('coral') // true
 
-extractTailwindColor('bg-blue-500')  // '#3b82f6'
-extractTailwindColor('p-4')          // null
+extractTailwindColor('bg-blue-500') // '#3b82f6'
+extractTailwindColor('p-4') // null
 ```
 
 ## License

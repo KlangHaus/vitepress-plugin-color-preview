@@ -20,9 +20,7 @@ function parseColorToRGB(color: string): RGB | null {
   const computed = getComputedStyle(el).color
   document.body.removeChild(el)
 
-  const match = computed.match(
-    /rgba?\(\s*([\d.]+),?\s*([\d.]+),?\s*([\d.]+)/,
-  )
+  const match = computed.match(/rgba?\(\s*([\d.]+),?\s*([\d.]+),?\s*([\d.]+)/)
   if (match) {
     return {
       r: Math.round(parseFloat(match[1])),
@@ -53,10 +51,12 @@ function rgbToHsl({ r, g, b }: RGB): HSL {
   const d = max - min
   const s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
 
-  let h = 0
-  if (max === rn) h = ((gn - bn) / d + (gn < bn ? 6 : 0)) / 6
-  else if (max === gn) h = ((bn - rn) / d + 2) / 6
-  else h = ((rn - gn) / d + 4) / 6
+  const h =
+    max === rn
+      ? ((gn - bn) / d + (gn < bn ? 6 : 0)) / 6
+      : max === gn
+        ? ((bn - rn) / d + 2) / 6
+        : ((rn - gn) / d + 4) / 6
 
   return { h, s, l }
 }
@@ -145,9 +145,7 @@ export function setupColorPreview(): void {
   // Hover — show tooltip
   document.addEventListener('mouseover', (e) => {
     const target = e.target as Element
-    const swatch =
-      target.closest('.color-swatch') ||
-      target.closest('.palette-swatch')
+    const swatch = target.closest('.color-swatch') || target.closest('.palette-swatch')
     if (!swatch || swatch === activeTarget) return
 
     activeTarget = swatch
@@ -184,9 +182,7 @@ export function setupColorPreview(): void {
 
   document.addEventListener('mouseout', (e) => {
     const target = e.target as Element
-    const swatch =
-      target.closest('.color-swatch') ||
-      target.closest('.palette-swatch')
+    const swatch = target.closest('.color-swatch') || target.closest('.palette-swatch')
     if (!swatch) return
 
     // Check that we're actually leaving the swatch (not entering a child)
@@ -200,9 +196,7 @@ export function setupColorPreview(): void {
   // Click — copy to clipboard
   document.addEventListener('click', (e) => {
     const target = e.target as Element
-    const swatch =
-      target.closest('.color-swatch') ||
-      target.closest('.palette-swatch')
+    const swatch = target.closest('.color-swatch') || target.closest('.palette-swatch')
     if (!swatch) return
 
     const raw =
@@ -212,9 +206,7 @@ export function setupColorPreview(): void {
 
     // For inline code swatches, copy the code text content
     const code = swatch.closest('code.color-preview')
-    const copyValue = code
-      ? code.textContent?.replace(/^\s+/, '') ?? raw
-      : raw
+    const copyValue = code ? (code.textContent?.replace(/^\s+/, '') ?? raw) : raw
 
     navigator.clipboard.writeText(copyValue).then(() => {
       swatch.classList.add('copied')
