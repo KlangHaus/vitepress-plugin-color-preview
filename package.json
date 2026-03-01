@@ -34,6 +34,14 @@
     "plugin"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KlangHaus/vitepress-plugin-color-preview.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KlangHaus/vitepress-plugin-color-preview/issues"
+  },
+  "homepage": "https://github.com/KlangHaus/vitepress-plugin-color-preview#readme",
   "peerDependencies": {
     "markdown-it": ">=13.0.0"
   },
