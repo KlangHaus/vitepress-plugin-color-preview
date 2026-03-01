@@ -1,5 +1,10 @@
 # vitepress-plugin-color-preview
 
+[![npm version](https://img.shields.io/npm/v/vitepress-plugin-color-preview)](https://www.npmjs.com/package/vitepress-plugin-color-preview)
+[![npm downloads](https://img.shields.io/npm/dm/vitepress-plugin-color-preview)](https://www.npmjs.com/package/vitepress-plugin-color-preview)
+[![CI](https://github.com/KlangHaus/vitepress-plugin-color-preview/actions/workflows/ci.yml/badge.svg)](https://github.com/KlangHaus/vitepress-plugin-color-preview/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/vitepress-plugin-color-preview)](LICENSE)
+
 Automatic color swatches for your VitePress documentation. Detects CSS color values and Tailwind classes in your markdown and renders inline previews.
 
 [Live Demo](https://klanghaus.github.io/vitepress-plugin-color-preview/) | [npm](https://www.npmjs.com/package/vitepress-plugin-color-preview) | [GitHub](https://github.com/KlangHaus/vitepress-plugin-color-preview)
