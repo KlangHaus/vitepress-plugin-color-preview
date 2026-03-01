@@ -141,18 +141,10 @@ export function setupColorPreview(): void {
   document.body.appendChild(tooltip)
 
   let activeTarget: Element | null = null
+  let pinned = false
 
-  // Hover — show tooltip
-  document.addEventListener('mouseover', (e) => {
-    const target = e.target as Element
-    const swatch = target.closest('[data-color]')
-    if (!swatch || swatch === activeTarget) return
-
-    activeTarget = swatch
-
-    const raw =
-      (swatch as HTMLElement).dataset.color ||
-      getComputedStyle(swatch).getPropertyValue('--swatch').trim()
+  function showTooltip(swatch: Element): void {
+    const raw = (swatch as HTMLElement).dataset.color
     if (!raw) return
 
     const rgb = parseColorToRGB(raw)
@@ -164,7 +156,7 @@ export function setupColorPreview(): void {
     const vsBlack = contrastRatio(rgb, { r: 0, g: 0, b: 0 })
 
     tooltip.innerHTML =
-      `<div class="cpt-preview" style="background: ${raw}"></div>` +
+      `<div class="cpt-preview" style="--swatch: ${raw}"></div>` +
       `<div class="cpt-formats">` +
       `<code>${hex}</code>` +
       `<code>${formatRgb(rgb)}</code>` +
@@ -176,35 +168,63 @@ export function setupColorPreview(): void {
       `</div>`
 
     tooltip.classList.add('visible')
-    // Position after making visible so dimensions are computed
     requestAnimationFrame(() => positionTooltip(tooltip, swatch))
+  }
+
+  function hideTooltip(): void {
+    activeTarget = null
+    pinned = false
+    tooltip.classList.remove('visible')
+  }
+
+  // Hover — show tooltip
+  document.addEventListener('mouseover', (e) => {
+    if (pinned) return
+    const target = e.target as Element
+    const swatch = target.closest('[data-color]')
+    if (!swatch || swatch === activeTarget) return
+
+    activeTarget = swatch
+    showTooltip(swatch)
   })
 
   document.addEventListener('mouseout', (e) => {
+    if (pinned) return
     const target = e.target as Element
     const swatch = target.closest('[data-color]')
     if (!swatch) return
 
-    // Check that we're actually leaving the swatch (not entering a child)
     const related = (e as MouseEvent).relatedTarget as Element | null
     if (related && swatch.contains(related)) return
 
-    activeTarget = null
-    tooltip.classList.remove('visible')
+    hideTooltip()
   })
 
-  // Click — copy to clipboard
+  // Click — toggle pinned tooltip + copy to clipboard
   document.addEventListener('click', (e) => {
     const target = e.target as Element
     const swatch = target.closest('[data-color]')
-    if (!swatch) return
 
-    const raw =
-      (swatch as HTMLElement).dataset.color ||
-      getComputedStyle(swatch).getPropertyValue('--swatch').trim()
+    // Click outside swatch — dismiss pinned tooltip
+    if (!swatch) {
+      if (pinned) hideTooltip()
+      return
+    }
+
+    const raw = (swatch as HTMLElement).dataset.color
     if (!raw) return
 
-    // For inline code swatches, copy the code text content
+    // If clicking the same swatch that's pinned, unpin it
+    if (pinned && swatch === activeTarget) {
+      hideTooltip()
+    } else {
+      // Pin tooltip on this swatch
+      activeTarget = swatch
+      pinned = true
+      showTooltip(swatch)
+    }
+
+    // Copy to clipboard
     const code = swatch.closest('code.color-preview')
     const copyValue = code ? (code.textContent?.replace(/^\s+/, '') ?? raw) : raw
 

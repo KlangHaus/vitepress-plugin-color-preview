@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.3.2] - 2026-03-01
+
+### Added
+
+- Click on any swatch to pin the tooltip open (shows formats + WCAG contrast)
+- Click the same swatch again or click elsewhere to dismiss
+- Hover still works for quick previews
+
+### Fixed
+
+- Tooltip preview now uses CSS `--swatch` variable for correct checkered background on transparent colors
+
 ## [0.3.1] - 2026-03-01
 
 ### Fixed
