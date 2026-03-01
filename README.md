@@ -180,7 +180,7 @@ extractTailwindColor('p-4') // null
 <!-- ALL-CONTRIBUTORS-LIST:START -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/DubPirate"><img src="https://github.com/DubPirate.png" width="80px;" alt=""/><br /><sub><b>Allan Asp</b></sub></a></td>
+    <td align="center"><a href="https://github.com/allanasp"><img src="https://github.com/allanasp.png" width="80px;" alt=""/><br /><sub><b>Allan Asp</b></sub></a></td>
   </tr>
 </table>
 <!-- ALL-CONTRIBUTORS-LIST:END -->
