@@ -1,0 +1,46 @@
+{
+  "name": "vitepress-plugin-color-preview",
+  "version": "0.1.0",
+  "description": "VitePress plugin that renders color swatches next to color codes in inline code blocks",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./client": {
+      "import": "./dist/client.js",
+      "types": "./dist/client.d.ts"
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "vitepress",
+    "markdown-it",
+    "color",
+    "preview",
+    "swatch",
+    "plugin"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "markdown-it": ">=13.0.0"
+  },
+  "devDependencies": {
+    "markdown-it": "^14.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0",
+    "@types/markdown-it": "^14.0.0"
+  }
+}

@@ -1,0 +1,204 @@
+/* ── Base swatch ────────────────────────────────────────────────── */
+
+.color-preview {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.color-swatch,
+.palette-swatch {
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
+  border-radius: 3px;
+  flex-shrink: 0;
+  vertical-align: middle;
+  cursor: pointer;
+  position: relative;
+
+  /* Checkered background visible through transparent colors */
+  background-image:
+    linear-gradient(var(--swatch), var(--swatch)),
+    repeating-conic-gradient(
+      var(--cpt-checker-a, #d4d4d4) 0% 25%,
+      var(--cpt-checker-b, #fff) 0% 50%
+    );
+  background-size: 100% 100%, 6px 6px;
+  border: 1px solid var(--cpt-border, rgba(128, 128, 128, 0.3));
+  transition: transform 0.15s ease;
+}
+
+.color-swatch:hover,
+.palette-swatch:hover {
+  transform: scale(1.3);
+}
+
+/* Swatches inside code blocks — slightly smaller */
+.code-swatch {
+  width: 0.75em;
+  height: 0.75em;
+  margin-right: 0.2em;
+  border-radius: 2px;
+}
+
+/* Copy feedback */
+.color-swatch.copied::after,
+.palette-swatch.copied::after {
+  content: '\2713';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6em;
+  font-weight: bold;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: inherit;
+  animation: cpt-fade 1.2s ease forwards;
+}
+
+@keyframes cpt-fade {
+  0%, 60% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ── Palette container ─────────────────────────────────────────── */
+
+.color-palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 0;
+}
+
+.palette-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.palette-swatch {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background-size: 100% 100%, 8px 8px;
+}
+
+.palette-label {
+  font-size: 0.75em;
+  font-family: var(--vp-font-family-mono, monospace);
+  color: var(--vp-c-text-2, #666);
+}
+
+/* ── Tooltip ───────────────────────────────────────────────────── */
+
+.color-preview-tooltip {
+  position: absolute;
+  z-index: 9999;
+  pointer-events: none;
+  background: var(--vp-c-bg-elv, #fff);
+  border: 1px solid var(--vp-c-border, #e2e2e3);
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  font-size: 12px;
+  line-height: 1.5;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  max-width: 260px;
+}
+
+.color-preview-tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cpt-preview {
+  width: 100%;
+  height: 24px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  border: 1px solid var(--cpt-border, rgba(128, 128, 128, 0.2));
+  background-image:
+    linear-gradient(var(--swatch, transparent), var(--swatch, transparent)),
+    repeating-conic-gradient(#d4d4d4 0% 25%, #fff 0% 50%);
+  background-size: 100% 100%, 8px 8px;
+}
+
+.cpt-formats {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 6px;
+}
+
+.cpt-formats code {
+  font-size: 11px;
+  font-family: var(--vp-font-family-mono, monospace);
+  color: var(--vp-c-text-1, #333);
+  background: none;
+  padding: 0;
+}
+
+.cpt-contrast {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 11px;
+  color: var(--vp-c-text-2, #666);
+  border-top: 1px solid var(--vp-c-border, #e2e2e3);
+  padding-top: 6px;
+}
+
+.cpt-contrast span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.cpt-wcag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 3px;
+  letter-spacing: 0.02em;
+}
+
+.cpt-wcag--aaa {
+  background: #16a34a;
+  color: #fff;
+}
+
+.cpt-wcag--aa {
+  background: #2563eb;
+  color: #fff;
+}
+
+.cpt-wcag--fail {
+  background: #dc2626;
+  color: #fff;
+}
+
+/* ── Dark mode (VitePress) ─────────────────────────────────────── */
+
+.dark .color-swatch,
+.dark .palette-swatch {
+  --cpt-border: rgba(255, 255, 255, 0.15);
+  --cpt-checker-a: #333;
+  --cpt-checker-b: #1a1a1a;
+}
+
+.dark .color-preview-tooltip {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.dark .cpt-preview {
+  background-image:
+    linear-gradient(var(--swatch, transparent), var(--swatch, transparent)),
+    repeating-conic-gradient(#333 0% 25%, #1a1a1a 0% 50%);
+}
