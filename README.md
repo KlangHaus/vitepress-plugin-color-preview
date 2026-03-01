@@ -2,6 +2,8 @@
 
 Automatic color swatches for your VitePress documentation. Detects CSS color values and Tailwind classes in your markdown and renders inline previews.
 
+![Inline swatches and color palettes](images/front.png)
+
 ## Features
 
 - **Inline code swatches** — `#3b82f6`, `rgb(239, 68, 68)`, `hsl(142, 71%, 45%)`, `rebeccapurple`
@@ -70,6 +72,8 @@ export default {
 }
 ```
 
+![Hover tooltip with format conversion and WCAG contrast](images/tooltip.png)
+
 The client setup enables interactive features (hover tooltips and click-to-copy). The CSS import is required for swatch styling. If you only want static swatches without interactivity, you can skip `setupColorPreview()` and just import the CSS.
 
 ## Usage
@@ -83,6 +87,8 @@ The primary color is `#3b82f6` and the accent is `hsl(280, 67%, 60%)`.
 ```
 
 ### Tailwind classes
+
+![Tailwind class support with tooltip](images/tailwind.png)
 
 Tailwind utility classes are detected automatically:
 
@@ -168,6 +174,18 @@ isNamedColor('coral') // true
 extractTailwindColor('bg-blue-500') // '#3b82f6'
 extractTailwindColor('p-4') // null
 ```
+
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/DubPirate"><img src="https://github.com/DubPirate.png" width="80px;" alt=""/><br /><sub><b>Allan Asp</b></sub></a></td>
+  </tr>
+</table>
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## License
 
