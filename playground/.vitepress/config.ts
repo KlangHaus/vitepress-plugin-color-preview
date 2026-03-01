@@ -4,6 +4,7 @@ import { colorPreviewPlugin, colorPreviewTransformer } from '../../src/index'
 export default defineConfig({
   title: 'Color Preview Playground',
   description: 'Test all features of vitepress-plugin-color-preview',
+  base: '/vitepress-plugin-color-preview/',
   themeConfig: {
     sidebar: [
       {
