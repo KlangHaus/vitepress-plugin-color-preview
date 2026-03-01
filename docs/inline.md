@@ -1,6 +1,20 @@
 # Inline Color Swatches
 
-Color values inside inline code blocks automatically get a swatch preview.
+Color values inside backtick code spans automatically get a swatch preview.
+
+## Usage
+
+Write any CSS color value in backticks and it renders with a small color circle:
+
+```md
+The primary color is `#3b82f6` and errors use `rgb(239, 68, 68)`.
+```
+
+**Result:** The primary color is `#3b82f6` and errors use `rgb(239, 68, 68)`.
+
+::: info Requirement
+This feature requires `colorPreviewPlugin` in your VitePress config. See [Getting Started](/getting-started) for setup.
+:::
 
 ## Hex Colors
 

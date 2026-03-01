@@ -1,6 +1,24 @@
 # Code Block Color Swatches
 
-Color values inside fenced code blocks get inline swatches.
+Color values inside fenced code blocks get small inline swatches next to each color token.
+
+## Usage
+
+Just write code blocks as normal — any color values are detected automatically:
+
+````md
+```css
+:root {
+  --primary: #3b82f6;
+}
+```
+````
+
+The swatches appear inline without modifying the code output. Works with CSS, SCSS, JavaScript, TypeScript, and any language that contains color values.
+
+::: info Requirement
+This feature requires `colorPreviewTransformer()` in your VitePress config. See [Getting Started](/getting-started) for setup.
+:::
 
 ## CSS
 

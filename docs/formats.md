@@ -1,6 +1,6 @@
-# All Supported Color Formats
+# Supported Formats
 
-Hover over any swatch to see format conversions and WCAG contrast info. Click to copy.
+Complete reference of all color formats detected by the plugin. Hover over any swatch to see format conversions and WCAG contrast info. Click to copy.
 
 ## Hex
 
