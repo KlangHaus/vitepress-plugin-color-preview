@@ -1,0 +1,20 @@
+{
+  "projectName": "vitepress-plugin-color-preview",
+  "projectOwner": "KlangHaus",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": ["README.md"],
+  "imageSize": 80,
+  "commit": true,
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "allanasp",
+      "name": "Allan Asp",
+      "avatar_url": "https://github.com/allanasp.png",
+      "profile": "https://github.com/allanasp",
+      "contributions": ["code", "doc", "design", "maintenance"]
+    }
+  ],
+  "contributorsPerLine": 7
+}
