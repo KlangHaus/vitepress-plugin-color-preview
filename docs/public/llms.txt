@@ -1,0 +1,14 @@
+# vitepress-plugin-color-preview
+
+> Automatic color swatches for VitePress documentation. Detects CSS color values and Tailwind classes in markdown and renders inline previews with hover tooltips and click-to-copy.
+
+## Docs
+
+- [Getting Started](https://klanghaus.github.io/vitepress-plugin-color-preview/getting-started): Installation and configuration
+- [Inline Colors](https://klanghaus.github.io/vitepress-plugin-color-preview/inline): Inline code color swatches
+- [Code Blocks](https://klanghaus.github.io/vitepress-plugin-color-preview/code-blocks): Fenced code block swatches
+- [Color Palettes](https://klanghaus.github.io/vitepress-plugin-color-preview/palette): :::colors palette container
+- [Tailwind Classes](https://klanghaus.github.io/vitepress-plugin-color-preview/tailwind): Tailwind CSS class detection
+- [Supported Formats](https://klanghaus.github.io/vitepress-plugin-color-preview/formats): All supported color formats
+- [API Reference](https://klanghaus.github.io/vitepress-plugin-color-preview/api): Exported functions and utilities
+- [Full documentation](https://klanghaus.github.io/vitepress-plugin-color-preview/llms-full.txt): Complete docs in a single file

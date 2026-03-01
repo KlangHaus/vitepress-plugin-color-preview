@@ -1,0 +1,290 @@
+# vitepress-plugin-color-preview
+
+Automatic color swatches for VitePress documentation. Detects CSS color values and Tailwind classes in markdown and renders inline previews with hover tooltips and click-to-copy.
+
+## Installation
+
+```bash
+npm install vitepress-plugin-color-preview
+```
+
+## Configuration
+
+The plugin has two parts: a server-side markdown plugin and a client-side setup for interactivity.
+
+### 1. VitePress config
+
+Add the markdown-it plugin and Shiki transformer to your VitePress config:
+
+```ts
+// .vitepress/config.ts
+import {
+  colorPreviewPlugin,
+  colorPreviewTransformer,
+} from 'vitepress-plugin-color-preview'
+
+export default {
+  markdown: {
+    config(md) {
+      md.use(colorPreviewPlugin)
+    },
+    codeTransformers: [colorPreviewTransformer()],
+  },
+}
+```
+
+- `colorPreviewPlugin` — Adds swatches to inline code and `:::colors` palette blocks
+- `colorPreviewTransformer` — Adds swatches inside fenced code blocks
+
+Both are optional. Use only what you need.
+
+### 2. Theme setup
+
+Import the CSS and set up the client-side interactivity in your theme:
+
+```ts
+// .vitepress/theme/index.ts
+import DefaultTheme from 'vitepress/theme'
+import { setupColorPreview } from 'vitepress-plugin-color-preview/client'
+import 'vitepress-plugin-color-preview/style.css'
+import { onMounted } from 'vue'
+
+export default {
+  extends: DefaultTheme,
+  setup() {
+    onMounted(() => setupColorPreview())
+  },
+}
+```
+
+- `style.css` — Required. Styles for swatches, tooltips, and palettes.
+- `setupColorPreview()` — Optional. Enables hover tooltips and click-to-copy.
+
+If you only want static swatches without interactivity, skip `setupColorPreview()` and just import the CSS.
+
+---
+
+## Feature: Inline Color Swatches
+
+Write any CSS color value in backticks and it renders with a small color circle.
+
+Requires `colorPreviewPlugin` in VitePress config.
+
+### Markdown
+
+```md
+The primary color is `#3b82f6` and errors use `rgb(239, 68, 68)`.
+```
+
+### Supported formats
+
+- Hex: `#f00`, `#ff6600`, `#ff660080`, `#f608`
+- RGB: `rgb(255, 100, 0)`, `rgba(255, 100, 0, 0.5)`, `rgb(255 100 0 / 50%)`
+- HSL: `hsl(30, 100%, 50%)`, `hsla(30, 100%, 50%, 0.5)`, `hsl(30 100% 50% / 50%)`
+- OKLCH: `oklch(70% 0.15 30)`, `oklch(70% 0.15 30 / 80%)`
+- OKLAB: `oklab(70% 0.1 -0.05)`
+- Named CSS colors: `red`, `blue`, `rebeccapurple`, `coral`, `cornflowerblue`, etc. (all 148 named colors)
+
+---
+
+## Feature: Code Block Swatches
+
+Color values inside fenced code blocks get small inline swatches next to each color token.
+
+Requires `colorPreviewTransformer()` in VitePress config.
+
+### Markdown
+
+````md
+```css
+:root {
+  --primary: #3b82f6;
+  --danger: #ef4444;
+}
+```
+````
+
+Works with CSS, SCSS, JavaScript, TypeScript, and any language containing color values. The swatches appear inline without modifying the code output.
+
+---
+
+## Feature: Color Palettes
+
+Display visual color palettes using the `:::colors` container.
+
+Requires `colorPreviewPlugin` in VitePress config.
+
+### Markdown
+
+```md
+:::colors
+#ef4444 #f97316 #eab308 #22c55e #3b82f6 #8b5cf6
+:::
+```
+
+Renders large clickable swatches with the color value as a label below. Click any swatch to copy. Supports multiple lines to group colors:
+
+```md
+:::colors
+#1e293b #334155 #475569
+#64748b #94a3b8 #cbd5e1
+:::
+```
+
+---
+
+## Feature: Tailwind Class Support
+
+Tailwind CSS utility classes are automatically detected and resolved to their color values.
+
+Requires `colorPreviewPlugin` in VitePress config.
+
+### Markdown
+
+```md
+Use `bg-blue-500` for the button and `text-gray-900` for the label.
+```
+
+### Supported utility prefixes
+
+bg-, text-, border-, ring-, shadow-, accent-, fill-, stroke-, from-, via-, to-, divide-, outline-, decoration-
+
+### Supported color families
+
+slate, gray, zinc, neutral, stone, red, orange, amber, yellow, lime, green, emerald, teal, cyan, sky, blue, indigo, violet, purple, fuchsia, pink, rose, black, white
+
+Each family includes shades 50-950 (where applicable).
+
+Only default Tailwind v3 colors are supported. Custom colors defined in tailwind.config.js are not detected.
+
+---
+
+## Feature: Hover Tooltips
+
+When `setupColorPreview()` is called, hovering any swatch shows a tooltip with:
+
+- Color format conversions (HEX, RGB, HSL)
+- WCAG contrast ratio against white background
+- WCAG contrast ratio against black background
+- AA and AAA compliance badges
+
+---
+
+## Feature: Click to Copy
+
+When `setupColorPreview()` is called, clicking any swatch copies the color value to the clipboard with a brief visual feedback animation.
+
+---
+
+## Feature: Dark Mode
+
+The plugin adapts to VitePress light/dark theme automatically via the `.dark` class and CSS custom properties.
+
+---
+
+## API Reference
+
+### Server-side exports
+
+Imported from `vitepress-plugin-color-preview`.
+
+#### `colorPreviewPlugin`
+
+A markdown-it plugin. Adds color swatches to inline code and enables `:::colors` palette blocks.
+
+```ts
+import { colorPreviewPlugin } from 'vitepress-plugin-color-preview'
+
+md.use(colorPreviewPlugin)
+```
+
+#### `colorPreviewTransformer()`
+
+A Shiki transformer (https://shiki.style/guide/transformers). Adds color swatches inside fenced code blocks. Returns a transformer object.
+
+```ts
+import { colorPreviewTransformer } from 'vitepress-plugin-color-preview'
+
+// In VitePress config:
+markdown: {
+  codeTransformers: [colorPreviewTransformer()]
+}
+```
+
+#### `extractColor(text): string | null`
+
+Checks if a string is an exact color value. Returns the color string or null.
+
+```ts
+import { extractColor } from 'vitepress-plugin-color-preview'
+
+extractColor('#ff6600')        // '#ff6600'
+extractColor('rebeccapurple')  // 'rebeccapurple'
+extractColor('rgb(255, 0, 0)') // 'rgb(255, 0, 0)'
+extractColor('not a color')    // null
+```
+
+#### `findColorsInText(text): Array<{ value: string, index: number, length: number }>`
+
+Finds all color values within a string. Returns an array of matches with position info.
+
+```ts
+import { findColorsInText } from 'vitepress-plugin-color-preview'
+
+findColorsInText('color: #ff6600; background: rgb(0, 128, 255);')
+// [
+//   { value: '#ff6600', index: 7, length: 7 },
+//   { value: 'rgb(0, 128, 255)', index: 27, length: 16 }
+// ]
+```
+
+#### `isNamedColor(text): boolean`
+
+Checks if a string is a valid CSS named color.
+
+```ts
+import { isNamedColor } from 'vitepress-plugin-color-preview'
+
+isNamedColor('coral')  // true
+isNamedColor('banana') // false
+```
+
+#### `extractTailwindColor(className): string | null`
+
+Resolves a Tailwind CSS utility class to its hex color. Returns the hex string or null.
+
+```ts
+import { extractTailwindColor } from 'vitepress-plugin-color-preview'
+
+extractTailwindColor('bg-blue-500')   // '#3b82f6'
+extractTailwindColor('text-red-600')  // '#dc2626'
+extractTailwindColor('border-black')  // '#000000'
+extractTailwindColor('p-4')           // null
+extractTailwindColor('bg-custom-500') // null
+```
+
+### Client-side exports
+
+Imported from `vitepress-plugin-color-preview/client`.
+
+#### `setupColorPreview(): void`
+
+Initializes interactive features using event delegation on document. Call once after the DOM is ready.
+
+```ts
+import { setupColorPreview } from 'vitepress-plugin-color-preview/client'
+
+onMounted(() => setupColorPreview())
+```
+
+Enables: hover tooltips (HEX/RGB/HSL + WCAG contrast), click-to-copy, AA/AAA badges.
+
+### CSS
+
+Imported from `vitepress-plugin-color-preview/style.css`. Required for swatches to render.
+
+```ts
+import 'vitepress-plugin-color-preview/style.css'
+```
+
+Includes styles for: inline swatches, code block swatches, palette layout, hover tooltips, copy feedback animation, dark mode (via `.dark` class).

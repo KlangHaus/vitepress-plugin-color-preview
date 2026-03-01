@@ -21,7 +21,7 @@ markdown: {
 
 ### `colorPreviewTransformer()`
 
-A [Shiki transformer](https://shiki.matsu.io/guide/transformers) that adds color swatches inside fenced code blocks. Returns a transformer object.
+A [Shiki transformer](https://shiki.style/guide/transformers) that adds color swatches inside fenced code blocks. Returns a transformer object.
 
 ```ts
 import { colorPreviewTransformer } from 'vitepress-plugin-color-preview'
