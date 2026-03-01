@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-03-01
+
+### Added
+
+- Getting Started page with installation and configuration guide
+- API Reference page with all exported functions documented
+- Usage sections on all feature pages (inline, code blocks, palettes, tailwind)
+- `llms.txt` and `llms-full.txt` for AI agent consumption
+- Top navigation with Guide and API links
+- GitHub social link in docs
+
+### Changed
+
+- Restructured docs sidebar into Introduction, Features, and Reference sections
+- Updated homepage with feature list and Get Started action
+- Fixed Shiki transformer link to shiki.style
+
+### Fixed
+
+- Upgraded npm in publish workflow for OIDC trusted publishing (requires npm >= 11.5.1)
+
 ## [0.1.4] - 2026-03-01
 
 ### Changed
