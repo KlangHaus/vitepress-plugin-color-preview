@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-03-01
+
+### Added
+
+- Design token table: use markdown table syntax inside `:::colors` blocks
+- Token tables support color swatch, token name, CSS variable, purpose, and any custom columns
+- Header and separator rows are optional
+- Tailwind classes work in the color column
+- Hover tooltips and click-to-copy on token table swatches
+- New docs page for Design Tokens feature
+
 ## [0.2.0] - 2026-03-01
 
 ### Added
