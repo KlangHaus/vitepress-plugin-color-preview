@@ -46,7 +46,7 @@
   "bugs": {
     "url": "https://github.com/KlangHaus/vitepress-plugin-color-preview/issues"
   },
-  "homepage": "https://github.com/KlangHaus/vitepress-plugin-color-preview#readme",
+  "homepage": "https://klanghaus.github.io/vitepress-plugin-color-preview/",
   "peerDependencies": {
     "markdown-it": ">=13.0.0"
   },
