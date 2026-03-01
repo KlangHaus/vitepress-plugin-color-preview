@@ -10,6 +10,9 @@ hero:
     - text: View on GitHub
       link: https://github.com/KlangHaus/vitepress-plugin-color-preview
       theme: alt
+    - text: npm
+      link: https://www.npmjs.com/package/vitepress-plugin-color-preview
+      theme: alt
 ---
 
 # Quick Demo

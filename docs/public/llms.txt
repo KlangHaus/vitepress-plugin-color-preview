@@ -2,6 +2,9 @@
 
 > Automatic color swatches for VitePress documentation. Detects CSS color values and Tailwind classes in markdown and renders inline previews with hover tooltips and click-to-copy.
 
+- npm: https://www.npmjs.com/package/vitepress-plugin-color-preview
+- GitHub: https://github.com/KlangHaus/vitepress-plugin-color-preview
+
 ## Docs
 
 - [Getting Started](https://klanghaus.github.io/vitepress-plugin-color-preview/getting-started): Installation and configuration
