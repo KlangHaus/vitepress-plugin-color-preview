@@ -145,10 +145,7 @@ export function setupColorPreview(): void {
   // Hover — show tooltip
   document.addEventListener('mouseover', (e) => {
     const target = e.target as Element
-    const swatch =
-      target.closest('.color-swatch') ||
-      target.closest('.palette-swatch') ||
-      target.closest('.color-token-swatch')
+    const swatch = target.closest('[data-color]')
     if (!swatch || swatch === activeTarget) return
 
     activeTarget = swatch
@@ -185,10 +182,7 @@ export function setupColorPreview(): void {
 
   document.addEventListener('mouseout', (e) => {
     const target = e.target as Element
-    const swatch =
-      target.closest('.color-swatch') ||
-      target.closest('.palette-swatch') ||
-      target.closest('.color-token-swatch')
+    const swatch = target.closest('[data-color]')
     if (!swatch) return
 
     // Check that we're actually leaving the swatch (not entering a child)
@@ -202,10 +196,7 @@ export function setupColorPreview(): void {
   // Click — copy to clipboard
   document.addEventListener('click', (e) => {
     const target = e.target as Element
-    const swatch =
-      target.closest('.color-swatch') ||
-      target.closest('.palette-swatch') ||
-      target.closest('.color-token-swatch')
+    const swatch = target.closest('[data-color]')
     if (!swatch) return
 
     const raw =
