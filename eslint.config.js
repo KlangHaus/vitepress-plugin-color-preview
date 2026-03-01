@@ -5,6 +5,6 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    ignores: ['dist/', 'playground/', 'node_modules/'],
+    ignores: ['dist/', 'docs/', 'node_modules/'],
   },
 )

@@ -1,6 +1,6 @@
 node_modules
 dist
-playground/node_modules
-playground/.vitepress/dist
-playground/.vitepress/cache
+docs/node_modules
+docs/.vitepress/dist
+docs/.vitepress/cache
 *.tgz

@@ -13,13 +13,13 @@ Bump version, build, publish to npm, and push tags to GitHub.
 
 ---
 
-## /playground
+## /docs
 
-Start the local playground dev server for testing.
+Start the local docs dev server for testing.
 
 ### Steps
 
-1. `cd playground && npm run dev`
+1. `cd docs && npm run dev`
 
 ---
 
@@ -44,7 +44,7 @@ Add support for a new CSS color format.
 
 1. Add regex constant in `src/colors.ts`
 2. Add to `COLOR_PATTERN` array (longer patterns before shorter)
-3. Test in `playground/formats.md`
+3. Test in `docs/formats.md`
 4. Run `/check`
 
 ---
@@ -56,5 +56,5 @@ Add a new Tailwind utility prefix (e.g. `caret-`, `placeholder-`).
 ### Steps
 
 1. Add prefix to `TW_PREFIXES` regex in `src/tailwind.ts`
-2. Test in `playground/tailwind.md`
+2. Test in `docs/tailwind.md`
 3. Run `/check`

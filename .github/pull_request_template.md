@@ -10,4 +10,4 @@
 
 - [ ] `npm run build` passes
 - [ ] `npm run typecheck` passes
-- [ ] Tested in the playground (`cd playground && npm run dev`)
+- [ ] Tested in the docs (`cd docs && npm run dev`)

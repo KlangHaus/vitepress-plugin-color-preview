@@ -42,12 +42,12 @@ npm run lint         # ESLint on src/
 npm run format       # Prettier on src/ and root config files
 ```
 
-## Playground
+## Docs
 
-Local VitePress site in `playground/` that imports directly from `src/` for development:
+Local VitePress site in `docs/` that imports directly from `src/` for development:
 
 ```bash
-cd playground && npm install && npm run dev
+cd docs && npm install && npm run dev
 ```
 
 Deployed automatically to GitHub Pages on push to main.

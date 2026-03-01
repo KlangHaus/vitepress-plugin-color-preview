@@ -18,17 +18,17 @@ npm run build        # Production build
 npm run typecheck    # Type check
 ```
 
-## Playground
+## Docs
 
-Test your changes in the local VitePress playground:
+Test your changes in the local VitePress docs site:
 
 ```bash
-cd playground
+cd docs
 npm install
 npm run dev
 ```
 
-The playground imports directly from `src/`, so changes are reflected immediately.
+The docs site imports directly from `src/`, so changes are reflected immediately.
 
 ## Pull requests
 
