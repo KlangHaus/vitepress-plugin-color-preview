@@ -27,6 +27,7 @@ Tailwind classes: `bg-blue-500` `text-emerald-600` `border-rose-400`
 - **Inline code swatches** — write any color in backticks and get a preview. [Learn more →](/inline)
 - **Code block swatches** — colors inside fenced code blocks get inline swatches. [Learn more →](/code-blocks)
 - **Color palettes** — `:::colors` container for visual palette display. [Learn more →](/palette)
+- **Design tokens** — document tokens with color, name, CSS variable, and purpose in a table. [Learn more →](/tokens)
 - **Tailwind classes** — detects Tailwind v3 color utilities automatically. [Learn more →](/tailwind)
 - **Click to copy** — click any swatch to copy the color value
 - **Hover tooltips** — WCAG contrast ratios + HEX/RGB/HSL conversions

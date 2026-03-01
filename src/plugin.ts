@@ -3,6 +3,88 @@ import type StateBlock from 'markdown-it/lib/rules_block/state_block.mjs'
 import { extractColor } from './colors'
 import { extractTailwindColor } from './tailwind'
 
+interface TokenRow {
+  color: string
+  columns: string[]
+}
+
+/** Parse a | col1 | col2 | ... | line into trimmed cells */
+function parseTableRow(line: string): string[] {
+  return line
+    .split('|')
+    .slice(1, -1) // drop empty first/last from leading/trailing |
+    .map((cell) => cell.trim())
+}
+
+/** Detect if a row is a markdown table separator (e.g. | --- | --- |) */
+function isSeparatorRow(cells: string[]): boolean {
+  return cells.every((cell) => /^:?-+:?$/.test(cell))
+}
+
+/** Render :::colors table as a design token table with swatches */
+function renderTokenTable(md: MarkdownIt, lines: string[]): string {
+  let headerCells: string[] | null = null
+  const rows: TokenRow[] = []
+
+  for (const line of lines) {
+    const cells = parseTableRow(line)
+    if (cells.length === 0) continue
+    if (isSeparatorRow(cells)) continue
+
+    // First cell should be a color value — detect if it's a header row
+    const firstCell = cells[0]
+    const isColor = extractColor(firstCell) !== null || extractTailwindColor(firstCell) !== null
+    if (!isColor && !headerCells) {
+      // This is a header row
+      headerCells = cells.slice(1) // skip the "Color" header
+      continue
+    }
+
+    rows.push({
+      color: firstCell,
+      columns: cells.slice(1),
+    })
+  }
+
+  // Build HTML table
+  let html = `<div class="color-token-table"><table>`
+
+  // Header
+  html += `<thead><tr><th>Color</th>`
+  if (headerCells) {
+    for (const h of headerCells) {
+      html += `<th>${md.utils.escapeHtml(h)}</th>`
+    }
+  } else if (rows.length > 0) {
+    for (let i = 0; i < rows[0].columns.length; i++) {
+      html += `<th></th>`
+    }
+  }
+  html += `</tr></thead>`
+
+  // Body
+  html += `<tbody>`
+  for (const row of rows) {
+    const color = md.utils.escapeHtml(row.color)
+    const resolvedColor = extractTailwindColor(row.color) ?? row.color
+    const escapedResolved = md.utils.escapeHtml(resolvedColor)
+
+    html += `<tr>`
+    html += `<td class="color-token-color">`
+    html += `<span class="color-token-swatch" style="--swatch: ${escapedResolved}" data-color="${escapedResolved}"></span>`
+    html += `<code>${color}</code>`
+    html += `</td>`
+
+    for (const cell of row.columns) {
+      html += `<td>${md.utils.escapeHtml(cell)}</td>`
+    }
+    html += `</tr>`
+  }
+  html += `</tbody></table></div>`
+
+  return html
+}
+
 /**
  * markdown-it plugin that adds color swatch previews to:
  * 1. Inline code blocks containing CSS color values or Tailwind classes
@@ -86,6 +168,16 @@ function paletteContainerRule(md: MarkdownIt): void {
 
   md.renderer.rules.color_palette = (tokens, idx) => {
     const content = tokens[idx].content
+    const lines = content.split('\n').filter((l) => l.trim())
+
+    // Detect table syntax: lines starting with |
+    const isTable = lines.every((l) => l.trim().startsWith('|'))
+
+    if (isTable) {
+      return renderTokenTable(md, lines)
+    }
+
+    // Simple palette: just color values
     const colors = content.split(/\s+/).filter(Boolean)
 
     const swatches = colors

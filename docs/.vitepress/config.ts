@@ -23,6 +23,7 @@ export default defineConfig({
           { text: 'Inline Colors', link: '/inline' },
           { text: 'Code Blocks', link: '/code-blocks' },
           { text: 'Color Palettes', link: '/palette' },
+          { text: 'Design Tokens', link: '/tokens' },
           { text: 'Tailwind Classes', link: '/tailwind' },
           { text: 'Supported Formats', link: '/formats' },
         ],

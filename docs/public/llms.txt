@@ -8,6 +8,7 @@
 - [Inline Colors](https://klanghaus.github.io/vitepress-plugin-color-preview/inline): Inline code color swatches
 - [Code Blocks](https://klanghaus.github.io/vitepress-plugin-color-preview/code-blocks): Fenced code block swatches
 - [Color Palettes](https://klanghaus.github.io/vitepress-plugin-color-preview/palette): :::colors palette container
+- [Design Tokens](https://klanghaus.github.io/vitepress-plugin-color-preview/tokens): Token table with color, name, variable, purpose
 - [Tailwind Classes](https://klanghaus.github.io/vitepress-plugin-color-preview/tailwind): Tailwind CSS class detection
 - [Supported Formats](https://klanghaus.github.io/vitepress-plugin-color-preview/formats): All supported color formats
 - [API Reference](https://klanghaus.github.io/vitepress-plugin-color-preview/api): Exported functions and utilities

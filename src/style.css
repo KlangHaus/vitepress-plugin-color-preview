@@ -24,7 +24,9 @@
       var(--cpt-checker-a, #d4d4d4) 0% 25%,
       var(--cpt-checker-b, #fff) 0% 50%
     );
-  background-size: 100% 100%, 6px 6px;
+  background-size:
+    100% 100%,
+    6px 6px;
   border: 1px solid var(--cpt-border, rgba(128, 128, 128, 0.3));
   transition: transform 0.15s ease;
 }
@@ -60,8 +62,13 @@
 }
 
 @keyframes cpt-fade {
-  0%, 60% { opacity: 1; }
-  100% { opacity: 0; }
+  0%,
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 /* ── Palette container ─────────────────────────────────────────── */
@@ -84,13 +91,103 @@
   width: 48px;
   height: 48px;
   border-radius: 8px;
-  background-size: 100% 100%, 8px 8px;
+  background-size:
+    100% 100%,
+    8px 8px;
 }
 
 .palette-label {
   font-size: 0.75em;
   font-family: var(--vp-font-family-mono, monospace);
   color: var(--vp-c-text-2, #666);
+}
+
+/* ── Token table ──────────────────────────────────────────────── */
+
+.color-token-table {
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+.color-token-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.color-token-table thead th {
+  text-align: left;
+  padding: 8px 12px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--vp-c-text-2, #666);
+  border-bottom: 2px solid var(--vp-c-border, #e2e2e3);
+}
+
+.color-token-table tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--vp-c-border, #e2e2e3);
+  color: var(--vp-c-text-1, #333);
+  vertical-align: middle;
+}
+
+.color-token-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.color-token-color {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.color-token-color code {
+  font-size: 13px;
+  font-family: var(--vp-font-family-mono, monospace);
+  background: none;
+  padding: 0;
+}
+
+.color-token-swatch {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  cursor: pointer;
+  position: relative;
+
+  background-image:
+    linear-gradient(var(--swatch), var(--swatch)),
+    repeating-conic-gradient(
+      var(--cpt-checker-a, #d4d4d4) 0% 25%,
+      var(--cpt-checker-b, #fff) 0% 50%
+    );
+  background-size:
+    100% 100%,
+    8px 8px;
+  border: 1px solid var(--cpt-border, rgba(128, 128, 128, 0.3));
+  transition: transform 0.15s ease;
+}
+
+.color-token-swatch:hover {
+  transform: scale(1.15);
+}
+
+.color-token-swatch.copied::after {
+  content: '\2713';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7em;
+  font-weight: bold;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: inherit;
+  animation: cpt-fade 1.2s ease forwards;
 }
 
 /* ── Tooltip ───────────────────────────────────────────────────── */
@@ -108,7 +205,9 @@
   line-height: 1.5;
   opacity: 0;
   transform: translateY(4px);
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
   max-width: 260px;
 }
 
@@ -126,7 +225,9 @@
   background-image:
     linear-gradient(var(--swatch, transparent), var(--swatch, transparent)),
     repeating-conic-gradient(#d4d4d4 0% 25%, #fff 0% 50%);
-  background-size: 100% 100%, 8px 8px;
+  background-size:
+    100% 100%,
+    8px 8px;
 }
 
 .cpt-formats {
@@ -187,7 +288,8 @@
 /* ── Dark mode (VitePress) ─────────────────────────────────────── */
 
 .dark .color-swatch,
-.dark .palette-swatch {
+.dark .palette-swatch,
+.dark .color-token-swatch {
   --cpt-border: rgba(255, 255, 255, 0.15);
   --cpt-checker-a: #333;
   --cpt-checker-b: #1a1a1a;

@@ -133,6 +133,28 @@ Renders large clickable swatches with the color value as a label below. Click an
 
 ---
 
+## Feature: Design Tokens
+
+Document design system colors with a structured token table inside `:::colors` blocks using markdown table syntax.
+
+Requires `colorPreviewPlugin` in VitePress config.
+
+### Markdown
+
+```md
+:::colors
+| Color   | Token   | CSS Variable      | Purpose             |
+| ------- | ------- | ----------------- | ------------------- |
+| #0059b3 | primary | --color-primary   | Primary brand color |
+| #3381cc | light   | --color-primary-light | Lighter shade   |
+| #003a7a | dark    | --color-primary-dark  | Darker shade    |
+:::
+```
+
+The first column must be a color value (CSS color or Tailwind class). Remaining columns can be any metadata: token names, CSS variables, purpose, etc. The header and separator rows are optional — if included, they become column headers. Without headers, columns render without labels.
+
+---
+
 ## Feature: Tailwind Class Support
 
 Tailwind CSS utility classes are automatically detected and resolved to their color values.
