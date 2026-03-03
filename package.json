@@ -1,6 +1,6 @@
 {
   "name": "vitepress-plugin-color-preview",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "VitePress plugin that renders color swatches next to color codes in inline code blocks",
   "type": "module",
   "main": "./dist/index.js",
@@ -18,7 +18,9 @@
     "./style.css": "./dist/style.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsup",

@@ -15,10 +15,15 @@ Automatic color swatches for your VitePress documentation. Detects CSS color val
 
 - **Inline code swatches** — `#3b82f6`, `rgb(239, 68, 68)`, `hsl(142, 71%, 45%)`, `rebeccapurple`
 - **Fenced code blocks** — swatches inside CSS, SCSS, JS, TS code blocks
+- **CSS variable resolution** — `var(--vp-c-brand)` gets a swatch at runtime if the variable is defined
 - **Color palettes** — `:::colors` container for visual palette display
+- **Color strips** — `:::colors-strip` renders a continuous horizontal color bar
+- **Token table** — `:::colors` with table syntax for structured token documentation
+- **Token comparison** — `:::colors-compare` shows variants (states, scales) side by side
+- **Contrast checker** — `:::colors-contrast` computes WCAG contrast ratios with AA/AAA badges
 - **Tailwind classes** — `bg-blue-500`, `text-emerald-600`, `border-rose-400`
-- **Click to copy** — click any swatch to copy the color value
-- **WCAG contrast** — hover tooltip shows contrast ratio against white/black with AA/AAA badges
+- **Click to copy** — click any swatch or table cell to copy the value
+- **WCAG contrast** — hover tooltip shows contrast ratio against white/black
 - **Format conversion** — hover tooltip shows HEX, RGB, and HSL
 - **Dark mode** — adapts to VitePress light/dark theme
 
@@ -60,7 +65,7 @@ export default {
 }
 ```
 
-`colorPreviewPlugin` handles inline code and `:::colors` palette blocks. `colorPreviewTransformer` handles fenced code blocks. Both are optional — use only what you need.
+`colorPreviewPlugin` handles inline code, `:::colors` palettes, `:::colors-strip`, `:::colors-compare`, and `:::colors-contrast`. `colorPreviewTransformer` handles fenced code blocks and `var()` markers. Both are optional — use only what you need.
 
 ### 2. Theme setup
 
@@ -81,7 +86,7 @@ export default {
 
 ![Hover tooltip with format conversion and WCAG contrast](images/tooltip.png)
 
-The client setup enables interactive features (hover tooltips and click-to-copy). The CSS import is required for swatch styling. If you only want static swatches without interactivity, you can skip `setupColorPreview()` and just import the CSS.
+The client setup enables interactive features: hover tooltips, click-to-copy, WCAG contrast cells, and CSS variable resolution. The CSS import is required for swatch styling. If you only want static swatches without interactivity, you can skip `setupColorPreview()` and just import the CSS.
 
 ## Usage
 
@@ -103,11 +108,9 @@ Tailwind utility classes are detected automatically:
 Use `bg-blue-500` for the button and `text-gray-900` for the label.
 ```
 
-Supports all default Tailwind v3 color utilities including `bg-`, `text-`, `border-`, `ring-`, `fill-`, `stroke-`, `from-`, `via-`, `to-`, and more.
-
 ### Fenced code blocks
 
-Colors in code blocks get small inline swatches:
+Colors in code blocks get small inline swatches. CSS `var()` references are resolved at runtime:
 
 ````md
 ```css
@@ -115,12 +118,13 @@ Colors in code blocks get small inline swatches:
   --primary: #3b82f6;
   --danger: #ef4444;
 }
+.button {
+  color: var(--vp-c-brand-1);
+}
 ```
 ````
 
 ### Color palettes
-
-Use the `:::colors` container to render a visual palette:
 
 ```md
 :::colors
@@ -128,12 +132,44 @@ Use the `:::colors` container to render a visual palette:
 :::
 ```
 
-This renders large clickable swatches with labels underneath. Supports multiple lines:
+### Color strips
+
+```md
+:::colors-strip
+#1e3a8a #1e40af #1d4ed8 #2563eb #3b82f6 #60a5fa #93c5fd #bfdbfe
+:::
+```
+
+### Token table
 
 ```md
 :::colors
-#1e293b #334155 #475569
-#64748b #94a3b8 #cbd5e1
+| Color | Token | CSS Variable | Purpose |
+| ------- | ------- | --------------- | ------------------- |
+| #0059b3 | primary | --color-primary | Primary brand color |
+| #22c55e | success | --color-success | Success feedback |
+:::
+```
+
+### Token comparison
+
+```md
+:::colors-compare
+| Token | Default | Hover | Active |
+| ------- | ------- | ------- | ------- |
+| primary | #2563eb | #1d4ed8 | #1e40af |
+| danger | #dc2626 | #b91c1c | #991b1b |
+:::
+```
+
+### Contrast checker
+
+```md
+:::colors-contrast
+| Foreground | Background | Usage |
+| ---------- | ---------- | ---------------- |
+| #ffffff | #2563eb | White on primary |
+| #1e293b | #ffffff | Body text |
 :::
 ```
 
@@ -144,10 +180,10 @@ This renders large clickable swatches with labels underneath. Supports multiple 
 ```ts
 import { colorPreviewPlugin, colorPreviewTransformer } from 'vitepress-plugin-color-preview'
 
-// markdown-it plugin — inline code + :::colors palettes
+// markdown-it plugin — inline code + :::colors variants
 md.use(colorPreviewPlugin)
 
-// Shiki transformer — fenced code blocks
+// Shiki transformer — fenced code blocks + var() markers
 const transformer = colorPreviewTransformer()
 ```
 
@@ -156,7 +192,7 @@ const transformer = colorPreviewTransformer()
 ```ts
 import { setupColorPreview } from 'vitepress-plugin-color-preview/client'
 
-// Enables hover tooltips and click-to-copy
+// Enables tooltips, click-to-copy, contrast cells, CSS var resolution
 setupColorPreview()
 ```
 
