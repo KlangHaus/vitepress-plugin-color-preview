@@ -190,6 +190,130 @@
   animation: cpt-fade 1.2s ease forwards;
 }
 
+/* ── Click-to-copy on table cells ────────────────────────────── */
+
+[data-copy] {
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.15s ease;
+}
+
+[data-copy]:hover {
+  background-color: var(--vp-c-bg-soft, rgba(142, 150, 170, 0.08));
+}
+
+[data-copy].copied::after {
+  content: 'Copied!';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  animation: cpt-fade 1.2s ease forwards;
+}
+
+/* ── Color strip ─────────────────────────────────────────────── */
+
+.color-strip {
+  display: flex;
+  margin: 16px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--cpt-border, rgba(128, 128, 128, 0.3));
+}
+
+.strip-segment {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+.strip-color {
+  width: 100%;
+  height: 48px;
+  cursor: pointer;
+  position: relative;
+
+  background-image:
+    linear-gradient(var(--swatch), var(--swatch)),
+    repeating-conic-gradient(
+      var(--cpt-checker-a, #d4d4d4) 0% 25%,
+      var(--cpt-checker-b, #fff) 0% 50%
+    );
+  background-size:
+    100% 100%,
+    8px 8px;
+  transition: filter 0.15s ease;
+}
+
+.strip-color:hover {
+  filter: brightness(1.1);
+}
+
+.strip-color.copied::after {
+  content: '\2713';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1em;
+  font-weight: bold;
+  color: white;
+  background: rgba(0, 0, 0, 0.4);
+  animation: cpt-fade 1.2s ease forwards;
+}
+
+.strip-label {
+  font-size: 0.7em;
+  font-family: var(--vp-font-family-mono, monospace);
+  color: var(--vp-c-text-2, #666);
+  padding: 4px 2px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* ── Contrast table ──────────────────────────────────────────── */
+
+.color-contrast-pair {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.color-contrast-pair code {
+  font-size: 12px;
+  font-family: var(--vp-font-family-mono, monospace);
+  background: none;
+  padding: 0;
+  color: var(--vp-c-text-2, #666);
+}
+
+.color-contrast-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cpt-contrast-ratio {
+  font-family: var(--vp-font-family-mono, monospace);
+  font-weight: 700;
+  font-size: 13px;
+}
+
 /* ── Tooltip ───────────────────────────────────────────────────── */
 
 .color-preview-tooltip {
@@ -276,7 +400,12 @@
 }
 
 .cpt-wcag--aa {
-  background: #2563eb;
+  background: #16a34a;
+  color: #fff;
+}
+
+.cpt-wcag--aa18 {
+  background: #d97706;
   color: #fff;
 }
 
@@ -289,7 +418,8 @@
 
 .dark .color-swatch,
 .dark .palette-swatch,
-.dark .color-token-swatch {
+.dark .color-token-swatch,
+.dark .strip-color {
   --cpt-border: rgba(255, 255, 255, 0.15);
   --cpt-checker-a: #333;
   --cpt-checker-b: #1a1a1a;
@@ -303,4 +433,8 @@
   background-image:
     linear-gradient(var(--swatch, transparent), var(--swatch, transparent)),
     repeating-conic-gradient(#333 0% 25%, #1a1a1a 0% 50%);
+}
+
+.dark .color-strip {
+  --cpt-border: rgba(255, 255, 255, 0.15);
 }

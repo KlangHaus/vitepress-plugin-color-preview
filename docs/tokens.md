@@ -1,10 +1,10 @@
-# Design Tokens
+# Token Table
 
-Document your design system colors with a structured token table inside `:::colors` blocks.
+Display color tokens in a structured table with swatches, names, variables, and any metadata you need.
 
 ## Usage
 
-Use markdown table syntax inside a `:::colors` block. The first column must be a color value, and the remaining columns can be any metadata you need:
+Use markdown table syntax inside a `:::colors` block. The first column must be a color value, and the remaining columns can be any metadata:
 
 ```md
 :::colors
@@ -16,7 +16,7 @@ Use markdown table syntax inside a `:::colors` block. The first column must be a
 :::
 ```
 
-The header row and separator row (`---`) are optional. If included, they become column headers. The first column is always rendered as a swatch + color value.
+The header row and separator row (`---`) are optional. If included, they become column headers. The first column is always rendered as a swatch + color value. Click any non-color cell to copy its text to the clipboard.
 
 ::: info Requirement
 This feature requires `colorPreviewPlugin` in your VitePress config. See [Getting Started](/getting-started) for setup.

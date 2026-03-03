@@ -13,6 +13,8 @@ interface HastElement {
   children: (HastElement | HastText)[]
 }
 
+const CSS_VAR_RE = /var\((--[\w-]+)\)/
+
 /**
  * Shiki transformer that adds color swatches to color values
  * inside fenced code blocks.
@@ -51,6 +53,12 @@ export function colorPreviewTransformer(): {
           injectSwatch(node, twColor)
           return
         }
+      }
+
+      // Check for CSS variable references — mark for runtime resolution
+      const varMatch = fullText.match(CSS_VAR_RE)
+      if (varMatch) {
+        node.properties['data-var'] = varMatch[1]
       }
     },
   }

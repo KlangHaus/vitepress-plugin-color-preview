@@ -6,7 +6,7 @@ Imported from `vitepress-plugin-color-preview`.
 
 ### `colorPreviewPlugin`
 
-A markdown-it plugin that adds color swatches to inline code and enables `:::colors` palette blocks.
+A markdown-it plugin that adds color swatches to inline code and enables `:::colors` palette blocks (including `:::colors-strip`, `:::colors-compare`, and `:::colors-contrast` variants).
 
 ```ts
 import { colorPreviewPlugin } from 'vitepress-plugin-color-preview'
@@ -21,7 +21,7 @@ markdown: {
 
 ### `colorPreviewTransformer()`
 
-A [Shiki transformer](https://shiki.style/guide/transformers) that adds color swatches inside fenced code blocks. Returns a transformer object.
+A [Shiki transformer](https://shiki.style/guide/transformers) that adds color swatches inside fenced code blocks and marks `var(--*)` references for runtime resolution. Returns a transformer object.
 
 ```ts
 import { colorPreviewTransformer } from 'vitepress-plugin-color-preview'
@@ -103,11 +103,14 @@ onMounted(() => setupColorPreview())
 
 **Features enabled:**
 
-| Feature       | Trigger               | Description                                              |
-| ------------- | --------------------- | -------------------------------------------------------- |
-| Hover tooltip | Mouse over any swatch | Shows HEX, RGB, HSL conversions and WCAG contrast ratios |
-| Click to copy | Click any swatch      | Copies the color value to clipboard with visual feedback |
-| WCAG badges   | Included in tooltip   | AA/AAA compliance badges against white and black         |
+| Feature          | Trigger               | Description                                              |
+| ---------------- | --------------------- | -------------------------------------------------------- |
+| Hover tooltip    | Mouse over any swatch | Shows HEX, RGB, HSL conversions and WCAG contrast ratios |
+| Click to copy    | Click any swatch      | Copies the color value to clipboard with visual feedback |
+| Cell copy        | Click any table cell  | Copies cell text on `[data-copy]` elements               |
+| WCAG badges      | Included in tooltip   | AA/AAA compliance badges against white and black         |
+| Contrast cells   | `:::colors-contrast`  | Computes WCAG ratio and badge for fg/bg pairs at runtime |
+| CSS var swatches | `var(--*)` in code    | Resolves CSS variables and injects swatches at runtime   |
 
 ## CSS
 
@@ -122,6 +125,8 @@ This import is **required** for swatches to render correctly. It includes styles
 - Inline code swatches (checkered background for transparency)
 - Fenced code block swatches
 - `:::colors` palette layout
+- `:::colors-strip` continuous color bars
+- `:::colors-compare` and `:::colors-contrast` tables
 - Hover tooltips
-- Click-to-copy feedback animation
+- Click-to-copy feedback animation (swatches and table cells)
 - Dark mode support (via VitePress `.dark` class)

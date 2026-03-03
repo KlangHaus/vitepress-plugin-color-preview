@@ -23,9 +23,18 @@ export default defineConfig({
           { text: 'Inline Colors', link: '/inline' },
           { text: 'Code Blocks', link: '/code-blocks' },
           { text: 'Color Palettes', link: '/palette' },
-          { text: 'Design Tokens', link: '/tokens' },
+          { text: 'Color Strips', link: '/strip' },
+          { text: 'Token Table', link: '/tokens' },
+          { text: 'Token Comparison', link: '/compare' },
+          { text: 'Contrast Checker', link: '/contrast' },
           { text: 'Tailwind Classes', link: '/tailwind' },
-          { text: 'Supported Formats', link: '/formats' },
+        ],
+      },
+      {
+        text: 'Understanding',
+        items: [
+          { text: 'Design Tokens', link: '/understanding-tokens' },
+          { text: 'Contrast & WCAG', link: '/understanding-contrast' },
         ],
       },
       {

@@ -63,12 +63,12 @@ export default {
 }
 ```
 
-| Import                | What it does                                           |
-| --------------------- | ------------------------------------------------------ |
-| `style.css`           | Required — styles for swatches, tooltips, and palettes |
-| `setupColorPreview()` | Optional — enables hover tooltips and click-to-copy    |
+| Import                | What it does                                                                           |
+| --------------------- | -------------------------------------------------------------------------------------- |
+| `style.css`           | Required — styles for swatches, tooltips, palettes, strips, and tables                 |
+| `setupColorPreview()` | Optional — enables hover tooltips, click-to-copy, contrast cells, and CSS var swatches |
 
-If you only want static swatches without interactivity, you can skip `setupColorPreview()` and just import the CSS.
+If you only want static swatches without interactivity, you can skip `setupColorPreview()` and just import the CSS. Note that `:::colors-contrast` WCAG badges and `var()` code block swatches require `setupColorPreview()` since they are computed at runtime.
 
 ## Minimal setup
 

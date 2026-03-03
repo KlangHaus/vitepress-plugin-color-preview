@@ -97,7 +97,7 @@ function wcagLevel(ratio: number): string {
 
 function wcagBadge(ratio: number): string {
   const level = wcagLevel(ratio)
-  const cls = level === 'Fail' ? 'fail' : level === 'AAA' ? 'aaa' : 'aa'
+  const cls = level === 'Fail' ? 'fail' : level === 'AA18' ? 'aa18' : level === 'AAA' ? 'aaa' : 'aa'
   return `<span class="cpt-wcag cpt-wcag--${cls}">${level}</span>`
 }
 
@@ -121,6 +121,69 @@ function positionTooltip(tooltip: HTMLElement, anchor: Element): void {
   tooltip.style.left = `${left + window.scrollX}px`
 }
 
+// ── Contrast cells (runtime WCAG computation) ──────────────────────
+
+function initContrastCells(): void {
+  const cells = document.querySelectorAll<HTMLElement>(
+    '.color-contrast-cell:not([data-initialized])',
+  )
+  for (const cell of cells) {
+    const fg = cell.dataset.fg
+    const bg = cell.dataset.bg
+    if (!fg || !bg) continue
+
+    const fgRgb = parseColorToRGB(fg)
+    const bgRgb = parseColorToRGB(bg)
+    if (!fgRgb || !bgRgb) continue
+
+    const ratio = contrastRatio(fgRgb, bgRgb)
+    cell.innerHTML =
+      `<span class="cpt-contrast-ratio">${ratio.toFixed(2)}:1</span> ` + wcagBadge(ratio)
+    cell.setAttribute('data-initialized', '')
+  }
+}
+
+// ── CSS variable resolution in code blocks ─────────────────────────
+
+function initCssVarSwatches(): void {
+  const elements = document.querySelectorAll<HTMLElement>('[data-var]:not([data-var-resolved])')
+  for (const el of elements) {
+    const varName = el.dataset.var
+    if (!varName) continue
+
+    // Resolve CSS variable value
+    const probe = document.createElement('div')
+    probe.style.display = 'none'
+    probe.style.color = `var(${varName})`
+    document.body.appendChild(probe)
+    const computed = getComputedStyle(probe).color
+    document.body.removeChild(probe)
+
+    el.setAttribute('data-var-resolved', '')
+
+    // Check if it resolved to a real color (not default black from unset var)
+    // We test by also checking an invalid var — if both produce the same result, var is unset
+    const probe2 = document.createElement('div')
+    probe2.style.display = 'none'
+    probe2.style.color = 'var(--cpt-nonexistent-test-var)'
+    document.body.appendChild(probe2)
+    const fallback = getComputedStyle(probe2).color
+    document.body.removeChild(probe2)
+
+    if (computed === fallback) continue // variable not defined
+
+    const rgb = parseColorToRGB(computed)
+    if (!rgb) continue
+
+    const hex = rgbToHex(rgb)
+    const swatch: HTMLSpanElement = document.createElement('span')
+    swatch.className = 'color-swatch code-swatch'
+    swatch.style.setProperty('--swatch', hex)
+    swatch.dataset.color = hex
+    el.insertBefore(swatch, el.firstChild)
+  }
+}
+
 // ── Setup ──────────────────────────────────────────────────────────
 
 /**
@@ -130,6 +193,9 @@ function positionTooltip(tooltip: HTMLElement, anchor: Element): void {
  * Features:
  * - Hover tooltip with color format conversions and WCAG contrast info
  * - Click to copy color value to clipboard
+ * - Click to copy token table cell text
+ * - Runtime WCAG contrast computation for :::colors-contrast tables
+ * - Runtime CSS variable resolution for var(--*) in code blocks
  */
 export function setupColorPreview(): void {
   if (typeof window === 'undefined') return
@@ -203,6 +269,20 @@ export function setupColorPreview(): void {
   // Click — toggle pinned tooltip + copy to clipboard
   document.addEventListener('click', (e) => {
     const target = e.target as Element
+
+    // Check for data-copy cell click (but not inside a data-color swatch)
+    const copyCell = target.closest('[data-copy]')
+    if (copyCell && !target.closest('[data-color]')) {
+      const value = (copyCell as HTMLElement).dataset.copy
+      if (value) {
+        navigator.clipboard.writeText(value).then(() => {
+          copyCell.classList.add('copied')
+          setTimeout(() => copyCell.classList.remove('copied'), 1200)
+        })
+      }
+      return
+    }
+
     const swatch = target.closest('[data-color]')
 
     // Click outside swatch — dismiss pinned tooltip
@@ -233,4 +313,16 @@ export function setupColorPreview(): void {
       setTimeout(() => swatch.classList.remove('copied'), 1200)
     })
   })
+
+  // Initialize runtime features
+  initContrastCells()
+  initCssVarSwatches()
+
+  // MutationObserver for SPA navigation — re-init on DOM changes
+  const docEl = document.querySelector('.vp-doc') ?? document.body
+  const observer = new MutationObserver(() => {
+    initContrastCells()
+    initCssVarSwatches()
+  })
+  observer.observe(docEl, { childList: true, subtree: true })
 }

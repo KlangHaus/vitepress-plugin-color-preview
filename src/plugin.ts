@@ -3,9 +3,13 @@ import type StateBlock from 'markdown-it/lib/rules_block/state_block.mjs'
 import { extractColor } from './colors'
 import { extractTailwindColor } from './tailwind'
 
-interface TokenRow {
-  color: string
-  columns: string[]
+type PaletteVariant = 'colors' | 'colors-compare' | 'colors-contrast' | 'colors-strip'
+
+const VARIANT_RE = /^:::(colors(?:-compare|-contrast|-strip)?)\s*$/
+
+interface ParsedTable {
+  headerCells: string[] | null
+  dataRows: string[][]
 }
 
 /** Parse a | col1 | col2 | ... | line into trimmed cells */
@@ -21,42 +25,70 @@ function isSeparatorRow(cells: string[]): boolean {
   return cells.every((cell) => /^:?-+:?$/.test(cell))
 }
 
-/** Render :::colors table as a design token table with swatches */
-function renderTokenTable(md: MarkdownIt, lines: string[]): string {
+/** Parse all table rows into header + data rows. Reused by all table renderers. */
+function parseAllRows(lines: string[]): ParsedTable {
   let headerCells: string[] | null = null
-  const rows: TokenRow[] = []
+  const dataRows: string[][] = []
+  let foundSeparator = false
 
   for (const line of lines) {
     const cells = parseTableRow(line)
     if (cells.length === 0) continue
-    if (isSeparatorRow(cells)) continue
-
-    // First cell should be a color value — detect if it's a header row
-    const firstCell = cells[0]
-    const isColor = extractColor(firstCell) !== null || extractTailwindColor(firstCell) !== null
-    if (!isColor && !headerCells) {
-      // This is a header row
-      headerCells = cells.slice(1) // skip the "Color" header
+    if (isSeparatorRow(cells)) {
+      foundSeparator = true
       continue
     }
 
-    rows.push({
-      color: firstCell,
-      columns: cells.slice(1),
-    })
+    // First non-separator row before a separator is the header
+    if (!foundSeparator && !headerCells && dataRows.length === 0) {
+      // Check if first cell is a color — if so, there's no header row
+      const firstCell = cells[0]
+      const isColor = extractColor(firstCell) !== null || extractTailwindColor(firstCell) !== null
+      if (!isColor) {
+        headerCells = cells
+        continue
+      }
+    }
+
+    dataRows.push(cells)
   }
 
-  // Build HTML table
+  return { headerCells, dataRows }
+}
+
+/** Test if a cell value resolves to a color */
+function isColorCell(value: string): boolean {
+  return extractColor(value) !== null || extractTailwindColor(value) !== null
+}
+
+/** Render a swatch + code for a color cell */
+function renderColorCell(md: MarkdownIt, raw: string): string {
+  const escaped = md.utils.escapeHtml(raw)
+  const resolvedColor = extractTailwindColor(raw) ?? raw
+  const escapedResolved = md.utils.escapeHtml(resolvedColor)
+  return (
+    `<td><div class="color-token-color">` +
+    `<span class="color-token-swatch" style="--swatch: ${escapedResolved}" data-color="${escapedResolved}"></span>` +
+    `<code>${escaped}</code>` +
+    `</div></td>`
+  )
+}
+
+/** Render :::colors table as a design token table with swatches */
+function renderTokenTable(md: MarkdownIt, lines: string[]): string {
+  const { headerCells, dataRows } = parseAllRows(lines)
+
+  // In the token table, first column is always color
   let html = `<div class="color-token-table"><table>`
 
   // Header
   html += `<thead><tr><th>Color</th>`
   if (headerCells) {
-    for (const h of headerCells) {
+    for (const h of headerCells.slice(1)) {
       html += `<th>${md.utils.escapeHtml(h)}</th>`
     }
-  } else if (rows.length > 0) {
-    for (let i = 0; i < rows[0].columns.length; i++) {
+  } else if (dataRows.length > 0) {
+    for (let i = 1; i < dataRows[0].length; i++) {
       html += `<th></th>`
     }
   }
@@ -64,19 +96,14 @@ function renderTokenTable(md: MarkdownIt, lines: string[]): string {
 
   // Body
   html += `<tbody>`
-  for (const row of rows) {
-    const color = md.utils.escapeHtml(row.color)
-    const resolvedColor = extractTailwindColor(row.color) ?? row.color
-    const escapedResolved = md.utils.escapeHtml(resolvedColor)
-
+  for (const row of dataRows) {
+    const color = row[0]
     html += `<tr>`
-    html += `<td class="color-token-color">`
-    html += `<span class="color-token-swatch" style="--swatch: ${escapedResolved}" data-color="${escapedResolved}"></span>`
-    html += `<code>${color}</code>`
-    html += `</td>`
+    html += renderColorCell(md, color)
 
-    for (const cell of row.columns) {
-      html += `<td>${md.utils.escapeHtml(cell)}</td>`
+    for (let i = 1; i < row.length; i++) {
+      const cellText = md.utils.escapeHtml(row[i])
+      html += `<td data-copy="${cellText}">${cellText}</td>`
     }
     html += `</tr>`
   }
@@ -85,10 +112,144 @@ function renderTokenTable(md: MarkdownIt, lines: string[]): string {
   return html
 }
 
+/** Render :::colors-strip as a continuous horizontal color bar */
+function renderStrip(md: MarkdownIt, content: string): string {
+  const colors = content.split(/\s+/).filter(Boolean)
+  if (colors.length === 0) return ''
+
+  let html = `<div class="color-strip">`
+  for (const c of colors) {
+    const escaped = md.utils.escapeHtml(c)
+    const resolved = extractTailwindColor(c) ?? c
+    const escapedResolved = md.utils.escapeHtml(resolved)
+    html +=
+      `<div class="strip-segment">` +
+      `<div class="strip-color" style="--swatch: ${escapedResolved}" data-color="${escapedResolved}"></div>` +
+      `<span class="strip-label">${escaped}</span>` +
+      `</div>`
+  }
+  html += `</div>`
+  return html
+}
+
+/** Render :::colors-compare as a table with auto-detected color columns */
+function renderCompareTable(md: MarkdownIt, lines: string[]): string {
+  const { headerCells, dataRows } = parseAllRows(lines)
+  if (dataRows.length === 0) return ''
+
+  // Auto-detect which columns are color columns using first data row
+  const colorCols = new Set<number>()
+  for (let i = 0; i < dataRows[0].length; i++) {
+    if (isColorCell(dataRows[0][i])) {
+      colorCols.add(i)
+    }
+  }
+
+  let html = `<div class="color-token-table color-compare-table"><table>`
+
+  // Header
+  if (headerCells) {
+    html += `<thead><tr>`
+    for (const h of headerCells) {
+      html += `<th>${md.utils.escapeHtml(h)}</th>`
+    }
+    html += `</tr></thead>`
+  }
+
+  // Body
+  html += `<tbody>`
+  for (const row of dataRows) {
+    html += `<tr>`
+    for (let i = 0; i < row.length; i++) {
+      if (colorCols.has(i)) {
+        html += renderColorCell(md, row[i])
+      } else {
+        const cellText = md.utils.escapeHtml(row[i])
+        html += `<td data-copy="${cellText}">${cellText}</td>`
+      }
+    }
+    html += `</tr>`
+  }
+  html += `</tbody></table></div>`
+
+  return html
+}
+
+/** Render :::colors-contrast as a WCAG contrast check table */
+function renderContrastTable(md: MarkdownIt, lines: string[]): string {
+  const { headerCells, dataRows } = parseAllRows(lines)
+  if (dataRows.length === 0) return ''
+
+  // First two columns are fg/bg colors, rest are metadata
+  const extraHeaders = headerCells ? headerCells.slice(2) : []
+
+  let html = `<div class="color-token-table color-contrast-table"><table>`
+
+  // Header
+  html += `<thead><tr><th>Pair</th><th>Contrast</th>`
+  for (const h of extraHeaders) {
+    html += `<th>${md.utils.escapeHtml(h)}</th>`
+  }
+  html += `</tr></thead>`
+
+  // Body
+  html += `<tbody>`
+  for (const row of dataRows) {
+    const fg = row[0] ?? ''
+    const bg = row[1] ?? ''
+    const fgResolved = extractTailwindColor(fg) ?? fg
+    const bgResolved = extractTailwindColor(bg) ?? bg
+    const fgEsc = md.utils.escapeHtml(fgResolved)
+    const bgEsc = md.utils.escapeHtml(bgResolved)
+
+    html += `<tr>`
+
+    // Pair cell — two swatches side by side
+    html += `<td><div class="color-contrast-pair">`
+    html += `<span class="color-token-swatch" style="--swatch: ${fgEsc}" data-color="${fgEsc}"></span>`
+    html += `<span class="color-token-swatch" style="--swatch: ${bgEsc}" data-color="${bgEsc}"></span>`
+    html += `<code>${md.utils.escapeHtml(fg)} / ${md.utils.escapeHtml(bg)}</code>`
+    html += `</div></td>`
+
+    // Contrast cell — computed at runtime
+    html += `<td class="color-contrast-cell" data-fg="${fgEsc}" data-bg="${bgEsc}"></td>`
+
+    // Remaining metadata columns
+    for (let i = 2; i < row.length; i++) {
+      const cellText = md.utils.escapeHtml(row[i])
+      html += `<td data-copy="${cellText}">${cellText}</td>`
+    }
+
+    html += `</tr>`
+  }
+  html += `</tbody></table></div>`
+
+  return html
+}
+
+/** Render simple palette — space-separated colors as large swatches */
+function renderSimplePalette(md: MarkdownIt, content: string): string {
+  const colors = content.split(/\s+/).filter(Boolean)
+
+  const swatches = colors
+    .map((c) => {
+      const escaped = md.utils.escapeHtml(c)
+      return (
+        `<div class="palette-item">` +
+        `<div class="palette-swatch" style="--swatch: ${escaped}" data-color="${escaped}"></div>` +
+        `<span class="palette-label">${escaped}</span>` +
+        `</div>`
+      )
+    })
+    .join('')
+
+  return `<div class="color-palette">${swatches}</div>`
+}
+
 /**
  * markdown-it plugin that adds color swatch previews to:
  * 1. Inline code blocks containing CSS color values or Tailwind classes
- * 2. :::colors palette containers
+ * 2. :::colors palette containers (and variants: compare, contrast, strip)
  */
 export function colorPreviewPlugin(md: MarkdownIt): void {
   inlineCodeRule(md)
@@ -126,7 +287,7 @@ function inlineCodeRule(md: MarkdownIt): void {
   }
 }
 
-/** Add :::colors palette container block rule */
+/** Add :::colors palette container block rule (with variant dispatch) */
 function paletteContainerRule(md: MarkdownIt): void {
   md.block.ruler.before(
     'fence',
@@ -136,8 +297,11 @@ function paletteContainerRule(md: MarkdownIt): void {
       const startMax = state.eMarks[startLine]
       const lineText = state.src.slice(startPos, startMax).trim()
 
-      if (!lineText.startsWith(':::colors')) return false
+      const variantMatch = lineText.match(VARIANT_RE)
+      if (!variantMatch) return false
       if (silent) return true
+
+      const variant = variantMatch[1] as PaletteVariant
 
       // Find closing :::
       let nextLine = startLine + 1
@@ -159,6 +323,7 @@ function paletteContainerRule(md: MarkdownIt): void {
 
       const token = state.push('color_palette', 'div', 0)
       token.content = contentLines.join('\n')
+      token.meta = { variant }
       token.map = [startLine, nextLine + 1]
       state.line = nextLine + 1
 
@@ -167,31 +332,30 @@ function paletteContainerRule(md: MarkdownIt): void {
   )
 
   md.renderer.rules.color_palette = (tokens, idx) => {
-    const content = tokens[idx].content
+    const token = tokens[idx]
+    const content = token.content
+    const variant: PaletteVariant = token.meta?.variant ?? 'colors'
     const lines = content.split('\n').filter((l) => l.trim())
 
     // Detect table syntax: lines starting with |
     const isTable = lines.every((l) => l.trim().startsWith('|'))
 
-    if (isTable) {
-      return renderTokenTable(md, lines)
+    switch (variant) {
+      case 'colors-strip':
+        return renderStrip(md, content)
+
+      case 'colors-compare':
+        if (isTable) return renderCompareTable(md, lines)
+        return renderSimplePalette(md, content)
+
+      case 'colors-contrast':
+        if (isTable) return renderContrastTable(md, lines)
+        return renderSimplePalette(md, content)
+
+      default:
+        // Original :::colors behavior
+        if (isTable) return renderTokenTable(md, lines)
+        return renderSimplePalette(md, content)
     }
-
-    // Simple palette: just color values
-    const colors = content.split(/\s+/).filter(Boolean)
-
-    const swatches = colors
-      .map((c) => {
-        const escaped = md.utils.escapeHtml(c)
-        return (
-          `<div class="palette-item">` +
-          `<div class="palette-swatch" style="--swatch: ${escaped}" data-color="${escaped}"></div>` +
-          `<span class="palette-label">${escaped}</span>` +
-          `</div>`
-        )
-      })
-      .join('')
-
-    return `<div class="color-palette">${swatches}</div>`
   }
 }

@@ -9,10 +9,14 @@
 
 - [Getting Started](https://klanghaus.github.io/vitepress-plugin-color-preview/getting-started): Installation and configuration
 - [Inline Colors](https://klanghaus.github.io/vitepress-plugin-color-preview/inline): Inline code color swatches
-- [Code Blocks](https://klanghaus.github.io/vitepress-plugin-color-preview/code-blocks): Fenced code block swatches
+- [Code Blocks](https://klanghaus.github.io/vitepress-plugin-color-preview/code-blocks): Fenced code block swatches and CSS var() resolution
 - [Color Palettes](https://klanghaus.github.io/vitepress-plugin-color-preview/palette): :::colors palette container
-- [Design Tokens](https://klanghaus.github.io/vitepress-plugin-color-preview/tokens): Token table with color, name, variable, purpose
+- [Color Strips](https://klanghaus.github.io/vitepress-plugin-color-preview/strip): :::colors-strip continuous color bars
+- [Token Table](https://klanghaus.github.io/vitepress-plugin-color-preview/tokens): Token table with color, name, variable, purpose (click cells to copy)
+- [Understanding Tokens](https://klanghaus.github.io/vitepress-plugin-color-preview/understanding-tokens): What design tokens are and how to document them
+- [Token Comparison](https://klanghaus.github.io/vitepress-plugin-color-preview/compare): :::colors-compare side-by-side token variants
+- [Contrast Checker](https://klanghaus.github.io/vitepress-plugin-color-preview/contrast): :::colors-contrast WCAG contrast ratio checker
+- [Understanding Contrast](https://klanghaus.github.io/vitepress-plugin-color-preview/understanding-contrast): What AA, AA18, AAA and contrast ratios mean
 - [Tailwind Classes](https://klanghaus.github.io/vitepress-plugin-color-preview/tailwind): Tailwind CSS class detection
-- [Supported Formats](https://klanghaus.github.io/vitepress-plugin-color-preview/formats): All supported color formats
 - [API Reference](https://klanghaus.github.io/vitepress-plugin-color-preview/api): Exported functions and utilities
 - [Full documentation](https://klanghaus.github.io/vitepress-plugin-color-preview/llms-full.txt): Complete docs in a single file

@@ -89,3 +89,18 @@ module.exports = {
   },
 }
 ```
+
+## CSS Variable References
+
+CSS `var()` references in code blocks are resolved at runtime. If the variable is defined on the page, a swatch appears automatically:
+
+```css
+.example {
+  color: var(--vp-c-brand-1);
+  background: var(--vp-c-bg);
+}
+```
+
+::: tip
+This works with any CSS variable defined in your site's stylesheets. The swatch is computed client-side using `getComputedStyle`, so it reflects the actual resolved value — including dark mode overrides.
+:::
