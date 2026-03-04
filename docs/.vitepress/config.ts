@@ -2,11 +2,11 @@ import { defineConfig } from 'vitepress'
 import { colorPreviewPlugin, colorPreviewTransformer } from '../../src/index'
 
 export default defineConfig({
-  title: 'vitepress-plugin-color-preview',
+  title: 'Color Preview Plugin',
   description: 'Automatic color swatches for your VitePress documentation',
   base: '/vitepress-plugin-color-preview/',
   head: [
-    ['meta', { property: 'og:title', content: 'vitepress-plugin-color-preview' }],
+    ['meta', { property: 'og:title', content: 'Color Preview Plugin' }],
     ['meta', { property: 'og:description', content: 'Automatic color swatches for your VitePress documentation' }],
     ['meta', { name: 'twitter:card', content: 'summary' }],
   ],

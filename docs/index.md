@@ -1,8 +1,8 @@
 ---
 layout: home
 hero:
-  name: Color Preview
-  text: VitePress Plugin
+  name: Color Preview Plugin
+  text: for VitePress
   tagline: Automatic color swatches for your documentation
   actions:
     - text: Get Started
@@ -14,8 +14,6 @@ hero:
       link: https://www.npmjs.com/package/vitepress-plugin-color-preview
       theme: alt
 ---
-
-# Quick Demo
 
 Inline colors: `#3b82f6` `rgb(239, 68, 68)` `hsl(142, 71%, 45%)` `rebeccapurple`
 
