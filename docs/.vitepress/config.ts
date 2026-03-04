@@ -6,7 +6,6 @@ export default defineConfig({
   description: 'Automatic color swatches for your VitePress documentation',
   base: '/vitepress-plugin-color-preview/',
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/vitepress-plugin-color-preview/favicon.svg' }],
     ['meta', { property: 'og:title', content: 'vitepress-plugin-color-preview' }],
     ['meta', { property: 'og:description', content: 'Automatic color swatches for your VitePress documentation' }],
     ['meta', { name: 'twitter:card', content: 'summary' }],
